@@ -9,7 +9,7 @@ namespace Euler
     {
         static void Main(string[] args)
         {
-            Problem13();
+            Problem25();
         }
 
         private static void Problem1()
@@ -191,17 +191,29 @@ namespace Euler
             Console.WriteLine(max);
         }
 
-        //private static void Problem9()
-        //{
-
-        //}
+        private static void Problem9()
+        {
+            const int Final = 1000;
+            for (int x = 1; x <= Final; x++)
+            {
+                for (int y = x + 1; y <= Final; y++)
+                {
+                    int z = Final - x - y;
+                    if (x * x + y * y == z * z)
+                    {
+                        Console.WriteLine(x * y * z);
+                        return;
+                    }
+                }
+            }
+        }
 
         private static void Problem10()
         {
             const int MaxNumber = 2000000;
 
             long sum = 2;
-            bool[] sieve = Helper.MakeSieve(MaxNumber);
+            bool[] sieve = Helper.MakePrimeSieve(MaxNumber);
             for(int i = 3; i < MaxNumber; i+=2)
             {
                 if(sieve[i])
@@ -414,8 +426,164 @@ namespace Euler
 
         private static void Problem14()
         {
+            long max = long.MinValue;
+            long bigNum = -1;
+            for(int i = 2; i < 1000000; ++i)
+            {
+                long current = i;
+                long chainCount = 1;
+                while (current > 1)
+                {
+                    if (current % 2 == 0)
+                    {
+                        current /= 2;
+                    }
+                    else
+                    {
+                        current = (current * 3) + 1;
+                    }
+                    ++chainCount;
+                }
 
+                if(chainCount > max)
+                {
+                    max = chainCount;
+                    bigNum = i;
+                }
+            }
+
+            Console.WriteLine($"Start num {bigNum}, chain of {max}");
         }
 
+        private static void Problem15()
+        {
+            const int gridX = 20;
+            const int gridY = 20;
+
+            int strokes = gridX + gridY;
+
+            BigInteger counts = Helper.GetFactorial(strokes) / (Helper.GetFactorial(gridX) * Helper.GetFactorial(gridY));
+            Console.WriteLine(counts);
+        }
+
+        private static void Problem16()
+        {
+            BigInteger bigNumber = BigInteger.Pow(2, 1000);
+
+            int sum = 0;
+            foreach (char digit in bigNumber.ToString())
+            {
+                sum += int.Parse($"{digit}");
+            }
+
+            Console.WriteLine(sum);
+        }
+
+        private static void Problem17()
+        {
+            long sum = 0;
+            for(int i = 1; i <= 1000; ++i)
+            {
+                string current = Helper.ToEnglishString(i);
+                current = current.Replace(" ", "");
+                current = current.Replace("-", "");
+                sum += current.Length;
+            }
+
+            Console.WriteLine(sum);
+        }
+
+        private static void Problem18()
+        {
+            DateTime startDate = new DateTime(1901, 1, 1);
+            DateTime endDate = new DateTime(2000, 12, 31);
+
+            int tally = 0;
+
+            for(DateTime curDate = startDate; curDate <= endDate; curDate = curDate.AddDays(1))
+            {
+                if(curDate.DayOfWeek == DayOfWeek.Sunday && curDate.Day == 1)
+                {
+                    ++tally;
+                    Console.WriteLine(curDate);
+                }
+            }
+            Console.WriteLine(tally);
+        }
+
+        //private static void Problem19()
+        //{
+
+        //}
+
+        private static void Problem20()
+        {
+            int sum = 0;
+            BigInteger num = Helper.GetFactorial(100);
+            foreach(char c in num.ToString())
+            {
+                sum += int.Parse($"{c}");
+            }
+
+            Console.WriteLine(sum);
+        }
+
+        //private static void Problem21()
+        //{
+            
+        //}
+
+        private static void Problem22()
+        {
+            string file = Helper.GetAllResourcesText("p022_names.txt");
+            string[] names = file.Replace("\"", "").Split(',');
+
+            List<string> namesList = new List<string>(names);
+            namesList.Sort();
+            names = namesList.ToArray();
+            namesList.Clear();
+
+            BigInteger fullTotal = 0;
+            for(int i = 0; i < names.Length; ++i)
+            {
+                string currentName = names[i].ToLower();
+                long curSum = 0;
+                foreach(char c in currentName)
+                {
+                    int charValue = c - 'a' + 1;
+                    curSum += charValue;
+                }
+
+                //Console.WriteLine($"Name: {currentName} ({curSum}). Rank: {curSum * i}");
+
+                fullTotal += curSum * (i + 1);
+            }
+
+            Console.WriteLine(fullTotal);
+        }
+
+        //private static void Problem23()
+        //{
+
+        //}
+
+        //private static void Problem24()
+        //{
+
+        //}
+
+        private static void Problem25()
+        {
+            BigInteger curNum = 0;
+            int iter = 0;
+            List<BigInteger> precomputed = new List<BigInteger>();
+            while (curNum.ToString().Length < 1000)
+            {
+                curNum = Helper.GetFibonacciAtIndex(iter, precomputed);
+                ++iter;
+            }
+
+            Console.WriteLine(iter);
+        }
     }
 }
